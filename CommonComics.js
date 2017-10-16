@@ -10,7 +10,7 @@ module.exports.get = (event, context, callback) => {
   for(let index = 0; index < event.characters.length; index++ ){
     tasks.push(function(callback){
       var lambdaParams = {
-        FunctionName : 'allan-service-dev-getComics',
+        FunctionName : 'allan-serv-dev-getComics',
         InvocationType : 'RequestResponse',
         Payload: '{"id": "' + event.characters[index] + '"}'
       };

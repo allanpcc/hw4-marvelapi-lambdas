@@ -3,9 +3,9 @@
 var http = require("http");
 var fort = require("string_format");
 
-var apiKey = "" ;/*[INSERT PUBLIC API KEY]*/
-var ts = ""; /*[INSERT TIMESTAMP*/
-var myhash = ""; /*[HASH TS, PUBLIC KEY, PRIVATE KEY WITH MD5*/
+var apiKey = "2e0d738914b3a22464a32992a2a57d69";
+var ts = "18092017";
+var myhash = "43e57955df3ac4f1bfcabdc1c1835f75";
 var limit = "100";
 var urlTemplate = "http://gateway.marvel.com/v1/public/characters?apikey={0}&ts={1}&hash={2}&limit={3}&offset={4}";
 module.exports.getCharacters = (event, context, callback) => {

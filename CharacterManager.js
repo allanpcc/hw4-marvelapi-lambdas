@@ -6,9 +6,9 @@ var http = require("http");
 var lambda = new AWS.Lambda({"region": "us-east-1"});
 require("string_format");
 
-var apiKey = "" ;/*[INSERT PUBLIC API KEY]*/
-var ts = ""; /*[INSERT TIMESTAMP*/
-var myhash = ""; /*[HASH TS, PUBLIC KEY, PRIVATE KEY WITH MD5*/
+var apiKey = "2e0d738914b3a22464a32992a2a57d69";
+var ts = "18092017";
+var myhash = "43e57955df3ac4f1bfcabdc1c1835f75";
 var getCharacterTemplateUrl = "http://gateway.marvel.com/v1/public/characters?apikey={0}&ts={1}&hash={2}"
 var characterTotal;
 
@@ -76,7 +76,7 @@ var invokeLambdas = function(characterId, characterCount, callback){
   for(let index = 0; index < lambdaCount; index++ ){
     var offset = index*100;
     let lambdaParams = {
-      FunctionName : 'allan-service-dev-getCharacters',
+      FunctionName : 'allan-serv-dev-getCharacters',
       InvocationType : 'RequestResponse',
       Payload: '{"offset":  "' + offset + '", "max": "' +characterTotal+'"}'
     };
