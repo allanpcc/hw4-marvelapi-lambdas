@@ -81,8 +81,7 @@ function getComics(evt, url, comicTitles, key, callback){
   });
 }
 
-function saveObject(comicTitles, key, callback)
-{
+function saveObject(comicTitles, key, callback) {
   var params = {
     Body: JSON.stringify(comicTitles),
     Bucket: bucket,
