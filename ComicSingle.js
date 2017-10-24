@@ -74,8 +74,8 @@ function getComics(evt, url, comicTitles, key, callback){
         }
       );
       if(comicTitles.length == comics["data"]["count"]){
-        saveObject(comicTitles, key, callback);
-        //callback(null, comicTitles);
+        //saveObject(comicTitles, key, callback);
+        callback(null, comicTitles);
       };
     });
   });

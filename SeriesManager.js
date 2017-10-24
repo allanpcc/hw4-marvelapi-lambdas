@@ -3,16 +3,23 @@
 var async = require("async");
 var AWS = require("aws-sdk");
 var http = require("http");
-var lambda = new AWS.Lambda({"region": "us-east-1"});
+var UUID = require('uuid-js');
 require("string_format");
+
+var lambda = new AWS.Lambda({"region": "us-east-1"});
+var dynamo = new AWS.DynamoDB({"region": "us-east-1"});
+var cloudwatch = new AWS.CloudWatchLogs({"region": "us-east-1"});
+
 var s3 = new AWS.S3({ region: "us-east-1"});
 var bucket = "allan-marvel";
+var table = "Allan-Marvel-logs";
 
 var apiKey = "2e0d738914b3a22464a32992a2a57d69";
 var ts = "18092017";
 var myhash = "43e57955df3ac4f1bfcabdc1c1835f75";
 var getSeriesTemplateUrl = "http://gateway.marvel.com/v1/public/characters/{0}/series?apikey={1}&ts={2}&hash={3}"
 var seriesTotal;
+var singleTotal=0;
 
 console.log("Log desde SeriesManager");
 
@@ -27,6 +34,7 @@ module.exports.get = (event, context, callback) => {
     if (foundOnBucket){
       console.log("It exists");
       getSeriesBucket(key, callback);
+      logTableInfo(event, singleTotal)
     }
     else {
       console.log("Not found");
@@ -60,6 +68,7 @@ var getCharacterDataSimple = function(getUrl, callback){
 
 var invokeLambdas = function(characterId,seriesCount, callback){
   var lambdaCount = Math.ceil(seriesCount / 100);
+  singleTotal += lambdaCount;
   var tasks = [];
   var series =[];
 
@@ -174,6 +183,7 @@ function getSeries(event, firstCharacterGetSeriesUrl, secondCharacterGetSeriesUr
       }
       else{
         var res = commonSeries(data[0], data[1]);
+        logTableInfo(event, singleTotal);
         saveObject(res, key, callback);
         //callback(null, res);
       }
@@ -214,4 +224,20 @@ function getSeriesBucket(key, callback){
       callback(null, response);
     }
   });
+}
+
+function logTableInfo(event, singleTotal){
+  var character1 = event.firstCharacterId;
+  var character2 = event.secondCharacterId;
+  var SingleQuantity = singleTotal;
+  var Id = UUID.create().hex;
+  var Common = 'Series';
+
+  var lambdaParams = {
+    FunctionName: 'allan-serv-dev-Logger',
+    InvocationType:'Event',
+    Payload: '{"Id": "' + Id + '", "Character 1": "' +character1 + '", "Character 2": "' +character2 + '", "Single Quantity": "' + SingleQuantity + '", "Common": "' + Common + '"}'
+  };
+  console.log("Logging: " + lambdaParams.Payload);
+  lambda.invoke(lambdaParams, function(err, data){});
 }

@@ -74,7 +74,8 @@ function getSeries(evt, url, seriesTitles, key, callback){
     }
   );
   if(seriesTitles.length == series["data"]["count"]){
-    saveObject(seriesTitles, key, callback);
+    //saveObject(seriesTitles, key, callback);
+    callback(null, seriesTitles);
   };
 });
 });
